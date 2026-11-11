@@ -1,0 +1,6 @@
+{
+  "name": "SG BusPulse - Real-Time Buses, Incidents & Delays",
+  "description": "Live Singapore bus arrivals with real-time GPS tracking, traffic incident overlays, and commuter-reported delay alerts for smoother commutes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
