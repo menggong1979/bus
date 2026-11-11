@@ -56,13 +56,15 @@ let userDelays: UserReportedDelay[] = [
   }
 ];
 
+const CONFIGURED_LTA_KEY = 'BG/nld+OTcWf0F5l2HiXuQ==';
+
 // Helper to determine active LTA Account Key
 function getAccountKey(req: Request): string | undefined {
   const headerKey = req.headers['x-account-key'] as string;
   if (headerKey && headerKey.trim().length > 0) return headerKey.trim();
   const envKey = process.env.LTA_ACCOUNT_KEY || process.env.DATAMALL_ACCOUNT_KEY;
   if (envKey && envKey.trim().length > 0) return envKey.trim();
-  return undefined;
+  return CONFIGURED_LTA_KEY;
 }
 
 // Generate high-fidelity simulated arrival data if no key or API fails

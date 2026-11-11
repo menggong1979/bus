@@ -249,9 +249,9 @@ export const BusMap: React.FC<BusMapProps> = ({
           if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return;
 
           // Arrival calculation
-          const estDate = new Date(bus.EstimatedArrival);
-          const diffMins = Math.max(0, Math.round((estDate.getTime() - Date.now()) / (1000 * 60)));
-          const arrivalLabel = diffMins === 0 ? 'ARR' : `${diffMins}m`;
+          const estDateMs = bus.EstimatedArrival ? new Date(bus.EstimatedArrival).getTime() : NaN;
+          const diffMins = !isNaN(estDateMs) ? Math.max(0, Math.round((estDateMs - Date.now()) / (1000 * 60))) : null;
+          const arrivalLabel = diffMins === null ? '--' : diffMins === 0 ? 'ARR' : `${diffMins}m`;
 
           // Load color
           let loadBorder = 'border-emerald-500';

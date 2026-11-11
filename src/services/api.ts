@@ -4,11 +4,15 @@ const STORAGE_KEY_ACCOUNT_KEY = 'sg_buspulse_account_key';
 const STORAGE_KEY_FAVORITES = 'sg_buspulse_favorites';
 const STORAGE_KEY_RECENT = 'sg_buspulse_recent';
 
+export const DEFAULT_LTA_KEY = 'BG/nld+OTcWf0F5l2HiXuQ==';
+
 export function getStoredAccountKey(): string {
   try {
-    return localStorage.getItem(STORAGE_KEY_ACCOUNT_KEY) || '';
+    const stored = localStorage.getItem(STORAGE_KEY_ACCOUNT_KEY);
+    if (stored !== null && stored !== '') return stored;
+    return DEFAULT_LTA_KEY;
   } catch {
-    return '';
+    return DEFAULT_LTA_KEY;
   }
 }
 

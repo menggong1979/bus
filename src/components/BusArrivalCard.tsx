@@ -21,8 +21,10 @@ export const BusArrivalCard: React.FC<BusArrivalCardProps> = ({
   onFocusCoordinates
 }) => {
   const getMinutesUntil = (estimatedArrival?: string): { minutes: number; label: string; isNow: boolean } => {
-    if (!estimatedArrival) return { minutes: -1, label: '--', isNow: false };
-    const diffMs = new Date(estimatedArrival).getTime() - Date.now();
+    if (!estimatedArrival || !estimatedArrival.trim()) return { minutes: -1, label: '--', isNow: false };
+    const dateMs = new Date(estimatedArrival).getTime();
+    if (isNaN(dateMs)) return { minutes: -1, label: '--', isNow: false };
+    const diffMs = dateMs - Date.now();
     const mins = Math.round(diffMs / 60000);
     if (mins <= 0) return { minutes: 0, label: 'Arr', isNow: true };
     return { minutes: mins, label: `${mins}m`, isNow: false };
