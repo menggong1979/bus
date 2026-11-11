@@ -243,19 +243,35 @@ app.get('/api/bus-arrival', async (req: Request, res: Response) => {
         const data = await ltaRes.json();
         return res.json({
           ...data,
-          dataSource: 'lta_live'
+          dataSource: 'lta_live',
+          liveConnected: true,
+          timestamp: new Date().toISOString()
         });
       } else {
-        console.warn(`LTA API returned status ${ltaRes.status}, falling back to simulated data.`);
+        const errText = await ltaRes.text().catch(() => '');
+        console.warn(`LTA DataMall rejected request (HTTP ${ltaRes.status}): ${errText}`);
+        const fallback = generateSimulatedArrivals(busStopCode, serviceNo);
+        return res.json({
+          ...fallback,
+          dataSource: 'simulated',
+          liveConnected: false,
+          ltaStatusCode: ltaRes.status,
+          ltaErrorMessage: `LTA DataMall returned HTTP ${ltaRes.status} (${errText || 'Invalid AccountKey'}). Check your key at datamall.lta.gov.sg.`
+        });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching from LTA DataMall:', err);
     }
   }
 
   // Fallback to simulated real-time data
   const fallbackData = generateSimulatedArrivals(busStopCode, serviceNo);
-  res.json(fallbackData);
+  res.json({
+    ...fallbackData,
+    dataSource: 'simulated',
+    liveConnected: false,
+    ltaErrorMessage: 'Direct live connection requires an LTA DataMall AccountKey.'
+  });
 });
 
 // 2. Traffic Incidents Proxy
@@ -276,10 +292,11 @@ app.get('/api/traffic-incidents', async (req: Request, res: Response) => {
         const data = await ltaRes.json();
         return res.json({
           ...data,
-          dataSource: 'lta_live'
+          dataSource: 'lta_live',
+          liveConnected: true
         });
       } else {
-        console.warn(`LTA TrafficIncidents returned status ${ltaRes.status}, falling back to simulated data.`);
+        console.warn(`LTA TrafficIncidents returned status ${ltaRes.status}`);
       }
     } catch (err) {
       console.error('Error fetching traffic incidents:', err);
@@ -290,7 +307,8 @@ app.get('/api/traffic-incidents', async (req: Request, res: Response) => {
   res.json({
     'odata.metadata': 'https://datamall2.mytransport.sg/ltaodataservice/$metadata#TrafficIncidents',
     value: simulated,
-    dataSource: 'simulated'
+    dataSource: 'simulated',
+    liveConnected: false
   });
 });
 

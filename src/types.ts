@@ -23,6 +23,10 @@ export interface BusArrivalResponse {
   BusStopCode: string;
   Services: BusServiceArrival[];
   dataSource?: 'lta_live' | 'simulated';
+  liveConnected?: boolean;
+  ltaStatusCode?: number;
+  ltaErrorMessage?: string;
+  timestamp?: string;
 }
 
 export interface TrafficIncident {

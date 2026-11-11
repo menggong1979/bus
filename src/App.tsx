@@ -20,6 +20,7 @@ import { ReportDelayModal } from './components/ReportDelayModal.tsx';
 import { ApiKeyModal } from './components/ApiKeyModal.tsx';
 import { StopImpactBanner } from './components/StopImpactBanner.tsx';
 import { analyzeTrafficImpactOnStop } from './utils/trafficImpact.ts';
+import { LiveConnectionBanner } from './components/LiveConnectionBanner.tsx';
 import {
   Search,
   RefreshCw,
@@ -203,7 +204,15 @@ export default function App() {
       />
 
       {/* Main Workspace Layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-5">
+        {/* Live LTA DataMall Direct Connection Banner */}
+        <LiveConnectionBanner
+          dataSource={dataSource}
+          hasActiveKey={hasActiveKey}
+          onRefreshLive={() => loadData(false)}
+          onOpenSettingsModal={() => setIsKeyModalOpen(true)}
+        />
+
         {/* Commute Control Bar: Stop Search, Key Presets, 20s Refresh Ring */}
         <section className="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 shadow-xl space-y-3.5">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
